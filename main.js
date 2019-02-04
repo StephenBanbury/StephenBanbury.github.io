@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "  <app-navbar></app-navbar>\r\n  <main role=\"main\" class=\"container\">\r\n  <app-header></app-header>\r\n  <hr />\r\n  <div class=\"starter-template\">\r\n    <div\r\n      class=\"col-lg-8 col-md-10 mx-auto\"\r\n      *ngFor=\"let item of (items | async)\">\r\n      <ngb-alert type=\"dark\" [dismissible]=\"false\">\r\n        <div class=\"lead\">\r\n          <h2 class=\"post-title\">{{ item.title }}</h2>\r\n          <h4 class=\"post-subtitle\">{{ item.subtitle }}</h4>\r\n          <b> {{ item.content }} </b>\r\n          <div>\r\n            <p class=\"post-meta\">\r\n              Posted by {{ postedby }} on\r\n              {{ item.posteddate.seconds * 1000 | date }}\r\n            </p>\r\n          </div>\r\n        </div>\r\n      </ngb-alert>\r\n    </div>\r\n  </div>\r\n  <hr />\r\n  <app-pager></app-pager>\r\n  <app-footer></app-footer>\r\n</main>\r\n"
+module.exports = "  <app-navbar></app-navbar>\n  <main role=\"main\" class=\"container\">\n  <app-header></app-header>\n  <hr />\n  <div class=\"starter-template\">\n    <div\n      class=\"col-lg-8 col-md-10 mx-auto\"\n      *ngFor=\"let item of (items | async)\">\n      <ngb-alert type=\"dark\" [dismissible]=\"false\">\n        <div class=\"lead\">\n          <h2 class=\"post-title\">{{ item.title }}</h2>\n          <h4 class=\"post-subtitle\">{{ item.subtitle }}</h4>\n          <b> {{ item.content }} </b>\n          <div>\n            <p class=\"post-meta\">\n              Posted by {{ postedby }} on\n              {{ item.posteddate.seconds * 1000 | date }}\n            </p>\n          </div>\n        </div>\n      </ngb-alert>\n    </div>\n  </div>\n  <hr />\n  <app-pager></app-pager>\n  <app-footer></app-footer>\n</main>\n"
 
 /***/ }),
 
@@ -70,6 +70,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var AppComponent = /** @class */ (function () {
     function AppComponent(db) {
+        this.title = 'CriticalReflectiveJournal';
         this.postedby = 'Stephen Banbury';
         this.items = db.collection('articles').valueChanges();
         this.items.forEach(function (element) {
@@ -308,7 +309,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-md navbar-dark bg-dark fixed-top\">\n  <!-- <a class=\"navbar-brand\" href=\"#\">NavBar</a> -->\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarsExampleDefault\" aria-controls=\"navbarsExampleDefault\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\"></span>\n  </button>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbarsExampleDefault\">\n    <ul class=\"navbar-nav mr-auto\">\n      <li class=\"nav-item active\">\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n      </li>\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link\" href=\"#\">Link</a>\n      </li> -->\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n      </li> -->\n      <li class=\"nav-item dropdown\" ngbDropdown>\n        <a class=\"nav-link dropdown-toggle\" id=\"dropdown01\" ngbDropdownToggle>Module</a>\n        <div class=\"dropdown-menu\" aria-labelledby=\"dropdown01\" ngbDropdownMenu>\n          <a *ngFor=\"let module of Modules\"class=\"dropdown-item\" href=\"#\">{{ module }}</a>\n        </div>\n      </li>\n    </ul>\n    <form class=\"form-inline my-2 my-lg-0\">\n      <input class=\"form-control mr-sm-2\" type=\"text\" placeholder=\"Search\" aria-label=\"Search\">\n      <button class=\"btn btn-outline-success my-2 my-sm-0\" type=\"submit\">Search</button>\n    </form>\n  </div>\n</nav>\n"
+module.exports = "<nav class=\"navbar navbar-expand-md navbar-dark bg-dark fixed-top\">\n  <!-- <a class=\"navbar-brand\" href=\"#\">NavBar</a> -->\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarsExampleDefault\" aria-controls=\"navbarsExampleDefault\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\">fdsdfsdf</span>\n  </button>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbarsExampleDefault\">\n    <ul class=\"navbar-nav mr-auto\">\n      <li class=\"nav-item active\">\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n      </li>\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link\" href=\"#\">Link</a>\n      </li> -->\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n      </li> -->\n      <li class=\"nav-item dropdown\" ngbDropdown>\n        <a class=\"nav-link dropdown-toggle\" id=\"dropdown01\" ngbDropdownToggle>Module</a>\n        <div class=\"dropdown-menu\" aria-labelledby=\"dropdown01\" ngbDropdownMenu>\n          <a *ngFor=\"let module of Modules\"class=\"dropdown-item\" href=\"#\">{{ module }}</a>\n        </div>\n      </li>\n    </ul>\n    <form class=\"form-inline my-2 my-lg-0\">\n      <input class=\"form-control mr-sm-2\" type=\"text\" placeholder=\"Search\" aria-label=\"Search\">\n      <button class=\"btn btn-outline-success my-2 my-sm-0\" type=\"submit\">Search</button>\n    </form>\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -477,7 +478,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Dev\Repositories\CriticalReflectiveJournal\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Dev\Repositories\journal\src\main.ts */"./src/main.ts");
 
 
 /***/ })
