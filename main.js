@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".nav-link {\r\n    font-size: large;\r\n  }\r\n  "
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "  <app-navbar></app-navbar>\n  <main role=\"main\" class=\"container\">\n  <app-header></app-header>\n  <hr />\n  <div class=\"starter-template\">\n    <div\n      class=\"col-lg-8 col-md-10 mx-auto\"\n      *ngFor=\"let item of (items | async)\">\n      <ngb-alert type=\"dark\" [dismissible]=\"false\">\n        <div class=\"lead\">\n          <h2 class=\"post-title\">{{ item.title }}</h2>\n          <h4 class=\"post-subtitle\">{{ item.subtitle }}</h4>\n          <b> {{ item.content }} </b>\n          <div>\n            <p class=\"post-meta\">\n              Posted by {{ postedby }} on\n              {{ item.posteddate.seconds * 1000 | date }}\n            </p>\n          </div>\n        </div>\n      </ngb-alert>\n    </div>\n  </div>\n  <hr />\n  <app-pager></app-pager>\n  <app-footer></app-footer>\n</main>\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n  <fml-simple-game></fml-simple-game>\n</div>\n\n"
 
 /***/ }),
 
@@ -56,34 +56,23 @@ module.exports = "  <app-navbar></app-navbar>\n  <main role=\"main\" class=\"con
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(db) {
-        this.title = 'CriticalReflectiveJournal';
-        this.postedby = 'Stephen Banbury';
-        this.items = db.collection('articles').valueChanges();
-        this.items.forEach(function (element) {
-            console.log(element);
-        });
+    function AppComponent() {
+        this.title = 'Follow My Leader';
     }
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-root',
+            selector: 'fml-root',
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
-        }),
-        __metadata("design:paramtypes", [_angular_fire_firestore__WEBPACK_IMPORTED_MODULE_1__["AngularFirestore"]])
+        })
     ], AppComponent);
     return AppComponent;
 }());
@@ -105,29 +94,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./navbar/navbar.component */ "./src/app/navbar/navbar.component.ts");
-/* harmony import */ var _header_header_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./header/header.component */ "./src/app/header/header.component.ts");
-/* harmony import */ var _footer_footer_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./footer/footer.component */ "./src/app/footer/footer.component.ts");
-/* harmony import */ var _pager_pager_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pager/pager.component */ "./src/app/pager/pager.component.ts");
-/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
-/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
-/* harmony import */ var _angular_fire__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/fire */ "./node_modules/@angular/fire/index.js");
-/* harmony import */ var _angular_fire_auth__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/fire/auth */ "./node_modules/@angular/fire/auth/index.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _simple_game_simple_game_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./simple-game/simple-game.component */ "./src/app/simple-game/simple-game.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
-
-
-
-
-
-
 
 
 
@@ -139,17 +112,10 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"],
-                _header_header_component__WEBPACK_IMPORTED_MODULE_4__["HeaderComponent"],
-                _footer_footer_component__WEBPACK_IMPORTED_MODULE_5__["FooterComponent"],
-                _pager_pager_component__WEBPACK_IMPORTED_MODULE_6__["PagerComponent"],
-                _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_3__["NavbarComponent"]
+                _simple_game_simple_game_component__WEBPACK_IMPORTED_MODULE_3__["SimpleGameComponent"]
             ],
             imports: [
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
-                _angular_fire__WEBPACK_IMPORTED_MODULE_9__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_11__["environment"].firebase),
-                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_8__["AngularFirestoreModule"],
-                _angular_fire_auth__WEBPACK_IMPORTED_MODULE_10__["AngularFireAuthModule"],
-                _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_7__["NgbModule"].forRoot() // Bootstrap Angular directives
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]]
@@ -162,38 +128,38 @@ var AppModule = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/footer/footer.component.css":
-/*!*********************************************!*\
-  !*** ./src/app/footer/footer.component.css ***!
-  \*********************************************/
+/***/ "./src/app/simple-game/simple-game.component.css":
+/*!*******************************************************!*\
+  !*** ./src/app/simple-game/simple-game.component.css ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "thead {\r\n    color: #337AB7\r\n}\r\n#container {\r\n  position: absolute;\r\n  bottom: 0;\r\n  left: 50%;\r\n  margin-left: -50px;\r\n}\r\n#card {\r\n  position: fixed;\r\n  width: 550px;\r\n  height: 550px;\r\n  top:50%;\r\n  left: 50%;\r\n  margin-top: -275px;\r\n  margin-left: -275px;\r\n  background: whitesmoke;\r\n  border: 3px solid red; \r\n}\r\n#target {\r\n  position: absolute;\r\n  width: 35px;\r\n  height: 35px;\r\n  border-width: 2px;\r\n  border-color: black;\r\n  background-color: red;\r\n}\r\n.counter {\r\n    color: royalblue;\r\n}"
 
 /***/ }),
 
-/***/ "./src/app/footer/footer.component.html":
-/*!**********************************************!*\
-  !*** ./src/app/footer/footer.component.html ***!
-  \**********************************************/
+/***/ "./src/app/simple-game/simple-game.component.html":
+/*!********************************************************!*\
+  !*** ./src/app/simple-game/simple-game.component.html ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-lg-8 col-md-10 mx-auto\">\n      <ul class=\"list-inline text-center\">\n        <li class=\"list-inline-item\">\n          <a href=\"#\">\n            <span class=\"fa-stack fa-lg\">\n              <i class=\"fas fa-circle fa-stack-2x\"></i>\n              <i class=\"fab fa-twitter fa-stack-1x fa-inverse\"></i>\n            </span>\n          </a>\n        </li>\n        <li class=\"list-inline-item\">\n          <a href=\"#\">\n            <span class=\"fa-stack fa-lg\">\n              <i class=\"fas fa-circle fa-stack-2x\"></i>\n              <i class=\"fab fa-facebook-f fa-stack-1x fa-inverse\"></i>\n            </span>\n          </a>\n        </li>\n        <li class=\"list-inline-item\">\n          <a href=\"#\">\n            <span class=\"fa-stack fa-lg\">\n              <i class=\"fas fa-circle fa-stack-2x\"></i>\n              <i class=\"fab fa-github fa-stack-1x fa-inverse\"></i>\n            </span>\n          </a>\n        </li>\n      </ul>\n      <p class=\"copyright text-muted\">{{ copyrightText }}</p>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div id=\"container\" (document:keydown)=\"OnKeyEvent($event)\"> \n<!-- <div id=\"container\"> -->\n  <div id=\"card\" (click)=\"OnMouseEvent($event)\">\n    <div id=\"target\" \n      [ngStyle]=\"TargetStyle()\" \n      (mouseenter)=\"OnMouseEvent($event)\"\n      (mouseleave)=\"OnMouseEvent($event)\">\n    </div>\n  </div>\n  <h2 class=\"counter\">Found target: {{ foundTarget }}</h2>\n  <h2 class=\"counter\">Hits: {{ hit }}</h2>\n  <h2 class=\"counter\">Misses: {{ miss }}</h2>\n</div>"
 
 /***/ }),
 
-/***/ "./src/app/footer/footer.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/footer/footer.component.ts ***!
-  \********************************************/
-/*! exports provided: FooterComponent */
+/***/ "./src/app/simple-game/simple-game.component.ts":
+/*!******************************************************!*\
+  !*** ./src/app/simple-game/simple-game.component.ts ***!
+  \******************************************************/
+/*! exports provided: SimpleGameComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FooterComponent", function() { return FooterComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SimpleGameComponent", function() { return SimpleGameComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -205,215 +171,151 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var FooterComponent = /** @class */ (function () {
-    function FooterComponent() {
-        this.copyrightText = "Copyright \xA9 Stephen Banbury 2019";
+var SimpleGameComponent = /** @class */ (function () {
+    function SimpleGameComponent() {
+        this._xMin = 2;
+        this._yMin = 2;
+        this._xMax = 515;
+        this._yMax = 515;
+        this._xInc = 0;
+        this._yInc = 0;
+        this._movementStarted = false;
+        this._movementPaused = false;
+        this._backgroundColor = 'red';
     }
-    FooterComponent.prototype.ngOnInit = function () {
+    SimpleGameComponent.prototype.TargetStyle = function () {
+        this._targetStyle = {
+            "top": this._yPos + "px",
+            "left": this._xPos + "px",
+            "background": this._backgroundColor
+        };
+        return this._targetStyle;
     };
-    FooterComponent = __decorate([
+    SimpleGameComponent.prototype.OnMouseEvent = function ($event) {
+        var childEvent = $event.path[0];
+        if (childEvent.id == "card" && $event.type == "click") {
+            this.miss += 1;
+        }
+        if (childEvent.id == "target") {
+            this.TargetEvent($event.type);
+        }
+    };
+    SimpleGameComponent.prototype.OnKeyEvent = function ($event) {
+        var key = $event.key;
+        switch (key) {
+            case "4": {
+                this._movementPaused = false;
+                this._xInc += -0.2;
+                break;
+            }
+            case "6": {
+                this._movementPaused = false;
+                this._xInc += 0.2;
+                break;
+            }
+            case "2": {
+                this._movementPaused = false;
+                this._yInc += 0.2;
+                break;
+            }
+            case "8": {
+                this._movementPaused = false;
+                this._yInc += -0.2;
+                break;
+            }
+            case "5": {
+                if (this._movementPaused) {
+                    this._movementPaused = false;
+                }
+                else {
+                    this._movementPaused = true;
+                    if (this.hit < 5) {
+                        this._xInc = 0;
+                        this._yInc = 0;
+                    }
+                }
+                break;
+            }
+        }
+        if (!this._movementStarted) {
+            this.StartMovement();
+            this._movementStarted = true;
+        }
+    };
+    SimpleGameComponent.prototype.TargetEvent = function (eventType) {
+        switch (eventType) {
+            case "click": {
+                this.hit += 1;
+                this.SetNewCoordinates();
+                if (this.hit >= 5) {
+                    this._movementPaused = false;
+                    if (this._xInc == 0) {
+                        this._xInc = 1;
+                    }
+                    if (this._yInc == 0) {
+                        this._yInc = 1;
+                    }
+                    if (!this._movementStarted) {
+                        this.StartMovement();
+                        this._movementStarted = true;
+                    }
+                }
+                break;
+            }
+            case "mouseenter": {
+                this._backgroundColor = "blue";
+                this.foundTarget += 1;
+                break;
+            }
+            case "mouseleave": {
+                this._backgroundColor = "red";
+                break;
+            }
+        }
+    };
+    SimpleGameComponent.prototype.StartMovement = function () {
+        var _this = this;
+        setInterval(function () {
+            _this.frame();
+        }, 1 * 60);
+    };
+    SimpleGameComponent.prototype.frame = function () {
+        if (!this._movementStarted || this._movementPaused) {
+            return;
+        }
+        ;
+        console.log('frame');
+        if (this._xPos >= this._xMax || this._xPos <= this._xMin) {
+            this._xInc = -this._xInc;
+        }
+        if (this._yPos >= this._yMax || this._yPos <= this._yMin) {
+            this._yInc = -this._yInc;
+        }
+        this._xPos += this._xInc;
+        this._yPos += this._yInc;
+    };
+    SimpleGameComponent.prototype.SetNewCoordinates = function () {
+        this._yPos = this.GenerateRandomValue(1, this._xMax);
+        this._xPos = this.GenerateRandomValue(1, this._xMax);
+    };
+    SimpleGameComponent.prototype.GenerateRandomValue = function (min, max) {
+        return Math.floor(Math.random() * max) + min;
+    };
+    SimpleGameComponent.prototype.ngOnInit = function () {
+        this.SetNewCoordinates();
+        this.foundTarget = 0;
+        this.hit = 0;
+        this.miss = 0;
+    };
+    SimpleGameComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-footer',
-            template: __webpack_require__(/*! ./footer.component.html */ "./src/app/footer/footer.component.html"),
-            styles: [__webpack_require__(/*! ./footer.component.css */ "./src/app/footer/footer.component.css")]
+            selector: 'fml-simple-game',
+            template: __webpack_require__(/*! ./simple-game.component.html */ "./src/app/simple-game/simple-game.component.html"),
+            styles: [__webpack_require__(/*! ./simple-game.component.css */ "./src/app/simple-game/simple-game.component.css")]
         }),
         __metadata("design:paramtypes", [])
-    ], FooterComponent);
-    return FooterComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/header/header.component.css":
-/*!*********************************************!*\
-  !*** ./src/app/header/header.component.css ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/header/header.component.html":
-/*!**********************************************!*\
-  !*** ./src/app/header/header.component.html ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"masthead\" style=\"background-image: url('../././assets/img/about-section-bg.jpg')\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col-lg-8 col-md-10 mx-auto\">\n        <div class=\"site-heading\">\n          <h1>{{ headerTitle }}</h1>\n          <span class=\"subheading\">{{ headerSubTitle }}</span>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n"
-
-/***/ }),
-
-/***/ "./src/app/header/header.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/header/header.component.ts ***!
-  \********************************************/
-/*! exports provided: HeaderComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeaderComponent", function() { return HeaderComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent() {
-        this.headerTitle = "A Critical Reflective Journal";
-        this.headerSubTitle = "By Stephen Banbury";
-    }
-    HeaderComponent.prototype.ngOnInit = function () {
-    };
-    HeaderComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-header',
-            template: __webpack_require__(/*! ./header.component.html */ "./src/app/header/header.component.html"),
-            styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/header/header.component.css")]
-        }),
-        __metadata("design:paramtypes", [])
-    ], HeaderComponent);
-    return HeaderComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/navbar/navbar.component.css":
-/*!*********************************************!*\
-  !*** ./src/app/navbar/navbar.component.css ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/navbar/navbar.component.html":
-/*!**********************************************!*\
-  !*** ./src/app/navbar/navbar.component.html ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<nav class=\"navbar navbar-expand-md navbar-dark bg-dark fixed-top\">\n  <!-- <a class=\"navbar-brand\" href=\"#\">NavBar</a> -->\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarsExampleDefault\" aria-controls=\"navbarsExampleDefault\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\">fdsdfsdf</span>\n  </button>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbarsExampleDefault\">\n    <ul class=\"navbar-nav mr-auto\">\n      <li class=\"nav-item active\">\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n      </li>\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link\" href=\"#\">Link</a>\n      </li> -->\n      <!-- <li class=\"nav-item\">\n        <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n      </li> -->\n      <li class=\"nav-item dropdown\" ngbDropdown>\n        <a class=\"nav-link dropdown-toggle\" id=\"dropdown01\" ngbDropdownToggle>Module</a>\n        <div class=\"dropdown-menu\" aria-labelledby=\"dropdown01\" ngbDropdownMenu>\n          <a *ngFor=\"let module of Modules\"class=\"dropdown-item\" href=\"#\">{{ module }}</a>\n        </div>\n      </li>\n    </ul>\n    <form class=\"form-inline my-2 my-lg-0\">\n      <input class=\"form-control mr-sm-2\" type=\"text\" placeholder=\"Search\" aria-label=\"Search\">\n      <button class=\"btn btn-outline-success my-2 my-sm-0\" type=\"submit\">Search</button>\n    </form>\n  </div>\n</nav>\n"
-
-/***/ }),
-
-/***/ "./src/app/navbar/navbar.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/navbar/navbar.component.ts ***!
-  \********************************************/
-/*! exports provided: NavbarComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavbarComponent", function() { return NavbarComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent() {
-        this.Modules = ['Module1', 'Module2', 'Module3'];
-    }
-    NavbarComponent.prototype.ngOnInit = function () {
-        console.log('Modules', this.Modules);
-    };
-    NavbarComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-navbar',
-            template: __webpack_require__(/*! ./navbar.component.html */ "./src/app/navbar/navbar.component.html"),
-            styles: [__webpack_require__(/*! ./navbar.component.css */ "./src/app/navbar/navbar.component.css")]
-        }),
-        __metadata("design:paramtypes", [])
-    ], NavbarComponent);
-    return NavbarComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/pager/pager.component.css":
-/*!*******************************************!*\
-  !*** ./src/app/pager/pager.component.css ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/pager/pager.component.html":
-/*!********************************************!*\
-  !*** ./src/app/pager/pager.component.html ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"clearfix\">\n  <a class=\"btn btn-primary float-right\" href=\"#\">{{ pagerLinkText }}</a>\n</div>\n"
-
-/***/ }),
-
-/***/ "./src/app/pager/pager.component.ts":
-/*!******************************************!*\
-  !*** ./src/app/pager/pager.component.ts ***!
-  \******************************************/
-/*! exports provided: PagerComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PagerComponent", function() { return PagerComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var PagerComponent = /** @class */ (function () {
-    function PagerComponent() {
-        this.pagerLinkText = "Older Posts \u2192";
-    }
-    PagerComponent.prototype.ngOnInit = function () {
-    };
-    PagerComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-pager',
-            template: __webpack_require__(/*! ./pager.component.html */ "./src/app/pager/pager.component.html"),
-            styles: [__webpack_require__(/*! ./pager.component.css */ "./src/app/pager/pager.component.css")]
-        }),
-        __metadata("design:paramtypes", [])
-    ], PagerComponent);
-    return PagerComponent;
+    ], SimpleGameComponent);
+    return SimpleGameComponent;
 }());
 
 
@@ -430,17 +332,20 @@ var PagerComponent = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
 var environment = {
-    production: false,
-    firebase: {
-        apiKey: "AIzaSyBUcYov6DySKvYt_kmtyjr0vW40Lhy5Ri0",
-        authDomain: "criticalreflectivejournal.firebaseapp.com",
-        databaseURL: "https://criticalreflectivejournal.firebaseio.com",
-        projectId: "criticalreflectivejournal",
-        storageBucket: "criticalreflectivejournal.appspot.com",
-        messagingSenderId: "749869795741"
-    }
+    production: false
 };
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
 
 /***/ }),
@@ -478,7 +383,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Dev\Repositories\journal\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Dev\Angular\follow-my-leader\src\main.ts */"./src/main.ts");
 
 
 /***/ })
