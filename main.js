@@ -157,7 +157,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var WordService = /** @class */ (function () {
     function WordService(http) {
         this.http = http;
-        this.thesaurusApiUrl = "http://words.bighugelabs.com/api/2/f8618d6158a86a5d11cb0079f164a540/";
+        this.thesaurusApiUrl = "https://words.bighugelabs.com/api/2/f8618d6158a86a5d11cb0079f164a540/";
     }
     WordService.prototype.getThesaurus = function (seedWord) {
         this.thesaurusApiUrl += seedWord + "/json";
