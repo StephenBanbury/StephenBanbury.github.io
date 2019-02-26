@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\nli {\n    font-size: large;\n}\ndiv.panel-heading {\n   font-size: x-large;\n}"
+module.exports = "/* You can add global styles to this file, and also import other style files */\r\nli {\r\n    font-size: large;\r\n}\r\ndiv.panel-heading {\r\n   font-size: x-large;\r\n}"
 
 /***/ }),
 
@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Dev\Angular\follow-my-leader\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! C:\Dev\Repositories\the-odd-word-out\src\styles.css */"./src/styles.css");
 
 
 /***/ })
