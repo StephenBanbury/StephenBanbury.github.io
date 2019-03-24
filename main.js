@@ -220,7 +220,7 @@ var GameObject = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* thead {\r\n    color: #337AB7\r\n} */\r\n/* #container {\r\n  display: block;\r\n  position: absolute;\r\n  bottom: 0;\r\n  left: 50%;\r\n  margin-left: -50px;\r\n} */\r\n#card {\r\n  width: 650px;\r\n  height: 650px;\r\n  border: 3px solid #73AD21;\r\n}\r\n#card h1 {\r\n  color: red;\r\n}\r\n.center {\r\n  margin: auto;\r\n  display: block;\r\n  position: fixed;\r\n  margin-top: -325px;\r\n  margin-left: -325px;\r\n  top:50%;\r\n  left: 50%;\r\n  padding: 10px;\r\n}\r\n.ball {\r\n  position: absolute;\r\n  width: 50px;\r\n  height: 50px;\r\n  border: 3px solid #73AD21;\r\n  font-family: Arial, Helvetica, sans-serif\r\n\r\n}\r\n.obstacle {\r\n  border-width: 2px;\r\n  border-color: black;\r\n}\r\n.flex-container {\r\n  display:flex;\r\n  align-items: center; /* Vertical center alignment */\r\n  justify-content: center; /* Horizontal center alignment */\r\n}"
+module.exports = "/* thead {\r\n    color: #337AB7\r\n} */\r\n/* #container {\r\n  display: block;\r\n  position: absolute;\r\n  bottom: 0;\r\n  left: 50%;\r\n  margin-left: -50px;\r\n} */\r\n#card {\r\n  width: 650px;\r\n  height: 650px;\r\n  border: 3px solid #73AD21;\r\n}\r\n#card h1 {\r\n  color: red;\r\n}\r\n.center {\r\n  margin: auto;\r\n  display: block;\r\n  position: fixed;\r\n  margin-top: -325px;\r\n  margin-left: -325px;\r\n  top:50%;\r\n  left: 50%;\r\n  padding: 10px;\r\n}\r\n.ball {\r\n  position: absolute;\r\n  width: 50px;\r\n  height: 50px;\r\n  border: 3px solid #73AD21;\r\n  font-family: Arial, Helvetica, sans-serif;\r\n}\r\n.ball:hover {\r\n  width: 70px; \r\n  height: 70px; \r\n  font-size: 2.4em;\r\n  transition: all 0.5s;\r\n}\r\n/* @keyframes move {\r\n  0% {}\r\n  50% {\r\n    transform: translate(0px, 0px) rotate(360deg);\r\n    background: #000; \r\n    opacity: 0.2;\r\n    border-radius: 0;\r\n  }\r\n  100% {}\r\n} */\r\n.obstacle {\r\n  border-width: 2px;\r\n  border-color: black;\r\n}\r\n.flex-container {\r\n  display:flex;\r\n  align-items: center; /* Vertical center alignment */\r\n  justify-content: center; /* Horizontal center alignment */\r\n}"
 
 /***/ }),
 
@@ -231,7 +231,7 @@ module.exports = "/* thead {\r\n    color: #337AB7\r\n} */\r\n/* #container {\r\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Find {{unrelatedWordNumber}} words unrelated to \"{{seedWord}}\". Avoid related words.</h2>\r\n<span id=\"container\" (document:keydown)=\"onKeyEvent($event)\">\r\n  <div id=\"card\" class=\"center\" [style.background-color]=\"cardColor\" (click)=\"onMouseEvent($event)\">\r\n    <h1>{{message}}</h1>\r\n    <div *ngFor=\"let gameObject of gameObjects\">\r\n        <div\r\n          id=\"{{gameObject.id}}\"\r\n          class=\"flex-container ball\"\r\n          [ngClass]=\"gameObject.className\"\r\n          [ngStyle]=\"objectStyle(gameObject.id)\"\r\n          (mouseenter)=\"onMouseEvent($event)\"\r\n          (mouseleave)=\"onMouseEvent($event)\"\r\n          [innerText]=\"gameObject.text\"\r\n        ></div>\r\n    </div>\r\n  </div>\r\n  <!-- <div *ngFor=\"let related of relatedWords\" [innerText]=related>    \r\n  </div>\r\n  <div *ngFor=\"let unrelated of unrelatedWords\" [innerText]=unrelated>    \r\n  </div> -->\r\n  <!-- <div>\r\n    <h2 class=\"counter\">Found target: {{ foundObject }}</h2>\r\n    <h2 class=\"counter\">Hits: {{ hit }}</h2>\r\n    <h2 class=\"counter\">Misses: {{ miss }}</h2>\r\n  </div> -->\r\n</span>\r\n"
+module.exports = "<h2>Seek out words or phrases related to \"{{seedWord}}\". Avoid those that are unrelated.</h2>\r\n<span id=\"container\" (document:keydown)=\"onKeyEvent($event)\">\r\n  <div id=\"card\" class=\"center\" [style.background-color]=\"cardColor\" (click)=\"onMouseEvent($event)\">\r\n    <h1>{{message}}</h1>\r\n    <div *ngFor=\"let gameObject of gameObjects\">\r\n        <div\r\n          id=\"{{gameObject.id}}\"\r\n          class=\"flex-container ball\"\r\n          [ngClass]=\"gameObject.className\"\r\n          [ngStyle]=\"objectStyle(gameObject.id)\"\r\n          (mouseenter)=\"onMouseEvent($event)\"\r\n          (mouseleave)=\"onMouseEvent($event)\"\r\n          [innerText]=\"gameObject.text\"\r\n        ></div>\r\n    </div>\r\n  </div>\r\n  <!-- <div *ngFor=\"let related of relatedWords\" [innerText]=related>    \r\n  </div>\r\n  <div *ngFor=\"let unrelated of unrelatedWords\" [innerText]=unrelated>    \r\n  </div> -->\r\n  <!-- <div>\r\n    <h2 class=\"counter\">Found target: {{ foundObject }}</h2>\r\n    <h2 class=\"counter\">Hits: {{ hit }}</h2>\r\n    <h2 class=\"counter\">Misses: {{ miss }}</h2>\r\n  </div> -->\r\n</span>\r\n"
 
 /***/ }),
 
@@ -279,8 +279,8 @@ var WordPongComponent = /** @class */ (function () {
         //public score: number;
         this.cardColor = "lightyellow";
         this.gameObjects = Array();
-        this.relatedWordNumber = 8;
-        this.unrelatedWordNumber = 4;
+        this.relatedWordNumber = 4;
+        this.unrelatedWordNumber = 8;
         this.relatedWords = new Array();
         this.unrelatedWords = new Array();
         this.gameObjectNumber = 0;
@@ -388,15 +388,19 @@ var WordPongComponent = /** @class */ (function () {
             // }
             case "mouseenter": {
                 this.temporaryGameObject = Object.assign({}, this.gameObjects[id]);
+                this.gameObjects[id].xInc = 0;
+                this.gameObjects[id].yInc = 0;
                 // The version below will ensure nested objects include. I'm not using it
                 // at the moment because there may be a small performance hit.
                 //this.temporaryGameObject = JSON.parse(JSON.stringify(this.gameObjects[id]));
-                this.gameObjects[id].background = "cyan";
+                //this.gameObjects[id].background = "cyan";
                 //this.foundObject += 1;
                 break;
             }
             case "mouseleave": {
-                this.gameObjects[id].background = this.temporaryGameObject.background;
+                this.gameObjects[id].xInc = this.temporaryGameObject.xInc;
+                this.gameObjects[id].yInc = this.temporaryGameObject.yInc;
+                //this.gameObjects[id].background = this.temporaryGameObject.background;
                 break;
             }
         }
@@ -428,10 +432,10 @@ var WordPongComponent = /** @class */ (function () {
                 }
             }
             if (unrelated == unrelatedHits) {
-                _this.nextLevel();
+                _this.gameOver();
             }
             if (related == relatedHits) {
-                _this.gameOver();
+                _this.nextLevel();
             }
         }, 0.5 * 60);
     };
@@ -457,14 +461,14 @@ var WordPongComponent = /** @class */ (function () {
             gameObject.yPos <= myObject.yPos + 50 &&
             gameObject.yPos + 50 >= myObject.yPos) {
             gameObject.isHit = true;
-            if (gameObject.isRelated) {
-                gameObject.background = "orange";
+            if (!gameObject.isRelated) {
+                gameObject.background = "red";
                 this.relatedWords.push(gameObject.text);
                 //this.score += 1;        
             }
             else {
                 //this.cardColor = "yellow";
-                gameObject.background = "red";
+                gameObject.background = "orange";
                 this.unrelatedWords.push(gameObject.text);
                 //this.score -= 1;        
             }
