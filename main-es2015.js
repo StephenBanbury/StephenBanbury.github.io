@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let eventLocation of eventLocations\"\n      [latitude]=\"eventLocation.latitude\"\n      [longitude]=\"eventLocation.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div>\n\n<h3>Events</h3>\n<div class=\"row\" *ngFor=\"let event of events\">\n  {{ event.distance }} m <b *ngIf=\"event.distance <= 20\">... close!</b>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let event of events\"\n      [latitude]=\"event.location.latitude\"\n      [longitude]=\"event.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -88,8 +88,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _shared_api_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shared/api.service */ "./src/app/shared/api.service.ts");
-/* harmony import */ var _shared_location_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./shared/location.service */ "./src/app/shared/location.service.ts");
-/* harmony import */ var _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared/location-object.model */ "./src/app/shared/location-object.model.ts");
+/* harmony import */ var _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./shared/location-object.model */ "./src/app/shared/location-object.model.ts");
+/* harmony import */ var _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared/event-object.model */ "./src/app/shared/event-object.model.ts");
+/* harmony import */ var _shared_location_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./shared/location.service */ "./src/app/shared/location.service.ts");
+
 
 
 
@@ -102,8 +104,8 @@ let AppComponent = class AppComponent {
         this.title = 'mudita-client';
         this.imageJsons = new Array();
         this.eventCount = 0;
-        this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
-        this.eventLocations = new Array();
+        this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
+        this.events = new Array();
         //this.eventLocations.push(new LocationObject());
         this.zoom = 17;
         this.myMarkerLabelOptions = {
@@ -136,14 +138,14 @@ let AppComponent = class AppComponent {
     frame() {
     }
     onSelectLocation(event) {
-        let newEventLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
+        const newEventLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         newEventLocation.latitude = event.coords.lat;
         newEventLocation.longitude = event.coords.lng;
-        newEventLocation.selected = true;
-        this.eventLocations.push(newEventLocation);
-        this.eventDistance = this.locationService.getDistanceFromLatLonInKm(this.myLocation.latitude, this.myLocation.longitude, newEventLocation.latitude, newEventLocation.longitude);
-        this.eventLocations[this.eventCount].distance = this.eventDistance;
-        //console.log('distance from me', this.eventDistance);
+        const newEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__["EventObject"]();
+        newEvent.location = newEventLocation;
+        newEvent.distance = Math.round(this.locationService.getDistanceFromLatLonInKm(this.myLocation.latitude, this.myLocation.longitude, event.coords.lat, event.coords.lng));
+        newEvent.selected = true;
+        this.events.push(newEvent);
         this.eventCount++;
         this.checkForLocalEvents();
     }
@@ -160,14 +162,14 @@ let AppComponent = class AppComponent {
         this.locationService.stopWatchLocation();
     }
     checkForLocalEvents() {
-        const eventCount = this.eventLocations.length;
+        const eventCount = this.events.length;
         if (eventCount == 0) {
             this.statusMessage = 'No events nearby';
             return false;
         }
-        this.eventLocations.sort((a, b) => a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0);
-        console.log('this.eventLocations', this.eventLocations);
-        if (this.eventLocations[0].distance <= 100) {
+        this.events.sort((a, b) => a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0);
+        console.log('this.eventLocations', this.events);
+        if (this.events[0].distance <= 20) {
             this.statusMessage = "There is an event close by! Here's a random image from Unsplash's API for you..";
             if (this.imageJsons.length == 0) {
                 this.getImage();
@@ -191,7 +193,7 @@ AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
         styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"], _shared_location_service__WEBPACK_IMPORTED_MODULE_3__["LocationService"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"], _shared_location_service__WEBPACK_IMPORTED_MODULE_5__["LocationService"]])
 ], AppComponent);
 
 
@@ -305,6 +307,22 @@ ApiService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
 ], ApiService);
 
+
+
+/***/ }),
+
+/***/ "./src/app/shared/event-object.model.ts":
+/*!**********************************************!*\
+  !*** ./src/app/shared/event-object.model.ts ***!
+  \**********************************************/
+/*! exports provided: EventObject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventObject", function() { return EventObject; });
+class EventObject {
+}
 
 
 /***/ }),
