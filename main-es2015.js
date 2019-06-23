@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h2>\n    {{ title }}\n  </h2>\n</div>\n\n<h1>My Location:</h1>\n<p>Latitude: {{ locations[0].latitude }}</p>\n<p>Longitude: {{ locations[0].longitude }}</p>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker [latitude]=\"location.latitude\" [longitude]=\"location.longitude\" *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<ul *ngFor=\"let imageJson of imageJsons\">\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a></h2>\n  </li>\n</ul>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h2>\n    {{ title }}\n  </h2>\n</div>\n\n<h1>My Location:</h1>\n<p>Latitude: {{ locations[0].latitude }}</p>\n<p>Longitude: {{ locations[0].longitude }}</p>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<ul *ngFor=\"let imageJson of imageJsons\">\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a></h2>\n  </li>\n</ul>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -106,8 +106,8 @@ let AppComponent = class AppComponent {
         this.locations.push(new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]());
     }
     ngOnInit() {
-        //this.getCurrentLocation();
-        this.start();
+        this.getCurrentLocation();
+        //this.start();
         //this.getImage();
     }
     start() {
@@ -305,14 +305,28 @@ __webpack_require__.r(__webpack_exports__);
 
 let LocationService = class LocationService {
     constructor() { }
+    // getCurrentLocation() {
+    //   let location = new LocationObject();
+    //   if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(position => {
+    //       if (position) {
+    //         location.latitude = position.coords.latitude;
+    //         location.longitude = position.coords.longitude;
+    //       }
+    //     },
+    //       (error: PositionError) => console.log(error));
+    //   } else {
+    //     alert( "Geolocation is not supported by this browser.");
+    //   }
+    //   return location;
+    // }
     getCurrentLocation() {
         let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_2__["LocationObject"]();
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                if (position) {
-                    location.latitude = position.coords.latitude;
-                    location.longitude = position.coords.longitude;
-                }
+            navigator.geolocation.watchPosition(position => {
+                location.latitude = position.coords.latitude;
+                location.longitude = position.coords.longitude;
+                location.accuracy = position.coords.accuracy;
             }, (error) => console.log(error));
         }
         else {
