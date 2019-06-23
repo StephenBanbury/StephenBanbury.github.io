@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h2>\n    {{ title }}\n  </h2>\n</div>\n\n<h1>My Location:</h1>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -134,9 +134,11 @@ var AppComponent = /** @class */ (function () {
         this.locationCount++;
     };
     AppComponent.prototype.watchMyLocation = function () {
-        this.locations[0] = this.locationService.watchLocation();
+        var _this = this;
+        //this.locations[0] = this.locationService.watchLocation();
         this.locationService.watchLocationObservable().subscribe(function (newLocation) {
             console.log('newLocation', newLocation);
+            _this.locations[0] = newLocation;
         });
     };
     AppComponent.prototype.getImage = function () {
@@ -334,19 +336,23 @@ var LocationService = /** @class */ (function () {
         return location;
     };
     LocationService.prototype.watchLocationObservable = function () {
-        var location = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].create(function (observer) {
             if (navigator.geolocation) {
+                var location_1 = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
                 navigator.geolocation.watchPosition(function (position) {
-                    location.latitude = position.coords.latitude;
-                    location.longitude = position.coords.longitude;
-                    location.accuracy = position.coords.accuracy;
-                }, function (error) { return console.log(error); }, { enableHighAccuracy: true });
+                    location_1.latitude = position.coords.latitude;
+                    location_1.longitude = position.coords.longitude;
+                    location_1.accuracy = position.coords.accuracy;
+                    console.log('location', location_1);
+                } //,
+                // (error: PositionError) => console.log(error),
+                // { enableHighAccuracy: true }
+                );
+                // } else {
+                //   alert("Geolocation is not supported by this browser.");
+                // }
+                //}
             }
-            else {
-                alert("Geolocation is not supported by this browser.");
-            }
-            return location;
         });
     };
     LocationService.prototype.getDistanceFromLatLonInKm = function (lat1, lon1, lat2, lon2) {
