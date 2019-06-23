@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        >\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let eventLocation of eventLocations\"\n      [latitude]=\"eventLocation.latitude\"\n      [longitude]=\"eventLocation.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -101,15 +101,31 @@ let AppComponent = class AppComponent {
         this.locationService = locationService;
         this.title = 'mudita-client';
         this.imageJsons = new Array();
-        this.locationCount = 0;
-        this.locations = new Array();
-        this.locations.push(new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]());
+        this.eventCount = 0;
+        this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
+        this.eventLocations = new Array();
+        //this.eventLocations.push(new LocationObject());
+        this.zoom = 17;
+        this.myMarkerLabelOptions = {
+            color: '#000',
+            fontFamily: '',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            text: 'Me',
+        };
+        this.myMarkerIconOptions = {
+            url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+            scaledSize: {
+                width: 40,
+                height: 40
+            }
+        };
     }
     ngOnInit() {
-        this.watchMyLocation();
+        this.trackMyLocation();
     }
     ngOnDestroy() {
-        // TODO unsubscribe where necessary
+        this.stopTrackMyLocation;
     }
     // TODO this may be used to for something, so it's staying here for now
     start() {
@@ -120,23 +136,47 @@ let AppComponent = class AppComponent {
     frame() {
     }
     onSelectLocation(event) {
-        let location = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
-        location.latitude = event.coords.lat;
-        location.longitude = event.coords.lng;
-        location.selected = true;
-        this.locations.push(location);
-        this.distanceFromMe = this.locationService.getDistanceFromLatLonInKm(this.locations[0].latitude, this.locations[0].longitude, location.latitude, location.longitude);
-        console.log('distance from me', this.distanceFromMe);
-        this.locationCount++;
+        let newEventLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
+        newEventLocation.latitude = event.coords.lat;
+        newEventLocation.longitude = event.coords.lng;
+        newEventLocation.selected = true;
+        this.eventLocations.push(newEventLocation);
+        this.eventDistance = this.locationService.getDistanceFromLatLonInKm(this.myLocation.latitude, this.myLocation.longitude, newEventLocation.latitude, newEventLocation.longitude);
+        this.eventLocations[this.eventCount].distance = this.eventDistance;
+        //console.log('distance from me', this.eventDistance);
+        this.eventCount++;
+        this.checkForLocalEvents();
     }
-    watchMyLocation() {
-        //this.locations[0] = this.locationService.watchLocation();
-        this.locationService.watchLocationObservable().subscribe(newLocation => {
-            this.locations[0].latitude = newLocation.coords.latitude;
-            this.locations[0].longitude = newLocation.coords.longitude;
-            this.locations[0].accuracy = newLocation.coords.accuracy;
-            console.log('watchMyLocation', this.locations[0]);
+    trackMyLocation() {
+        this.locationService.watchLocation().subscribe(newLocation => {
+            this.myLocation.latitude = newLocation.coords.latitude;
+            this.myLocation.longitude = newLocation.coords.longitude;
+            this.myLocation.accuracy = newLocation.coords.accuracy;
+            //console.log('watchMyLocation', this.locations[0]);
+            this.checkForLocalEvents();
         });
+    }
+    stopTrackMyLocation() {
+        this.locationService.stopWatchLocation();
+    }
+    checkForLocalEvents() {
+        const eventCount = this.eventLocations.length;
+        if (eventCount == 0) {
+            this.statusMessage = 'No events nearby';
+            return false;
+        }
+        this.eventLocations.sort((a, b) => a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0);
+        console.log('this.eventLocations', this.eventLocations);
+        if (this.eventLocations[0].distance <= 100) {
+            this.statusMessage = "There is an event close by! Here's a random image from Unsplash's API for you..";
+            if (this.imageJsons.length == 0) {
+                this.getImage();
+            }
+        }
+        else {
+            this.statusMessage = "No events nearby";
+            this.imageJsons = new Array();
+        }
     }
     getImage() {
         this.apiService.getImage()
@@ -298,48 +338,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
-/* harmony import */ var _location_object_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./location-object.model */ "./src/app/shared/location-object.model.ts");
-
 
 
 
 let LocationService = class LocationService {
     constructor() { }
     watchLocation() {
-        let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
-        if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(position => {
-                location.latitude = position.coords.latitude;
-                location.longitude = position.coords.longitude;
-                location.accuracy = position.coords.accuracy;
-            }, (error) => console.log(error), { enableHighAccuracy: true });
-        }
-        else {
-            alert("Geolocation is not supported by this browser.");
-        }
-        return location;
-    }
-    watchLocationObservable() {
         return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].create(observer => {
             if (navigator.geolocation) {
-                //let location = new LocationObject();
-                navigator.geolocation.watchPosition(position => {
+                this.watchId = navigator.geolocation.watchPosition(position => {
                     observer.next(position);
                     observer.complete;
-                    // location.latitude = position.coords.latitude;
-                    // location.longitude = position.coords.longitude;
-                    // location.accuracy = position.coords.accuracy;
-                    console.log('watchLocationObservable', position);
-                } //,
-                // (error: PositionError) => console.log(error),
-                // { enableHighAccuracy: true }
-                );
-                // } else {
-                //   alert("Geolocation is not supported by this browser.");
-                // }
-                //}
+                    //console.log('watchLocationObservable', position);
+                }, (error) => console.log(error), { enableHighAccuracy: true });
+            }
+            else {
+                alert("Geolocation is not supported by this browser.");
             }
         });
+    }
+    stopWatchLocation() {
+        navigator.geolocation.clearWatch(this.watchId);
     }
     getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
         let R = 6371; // Radius of the earth in km
@@ -350,7 +369,7 @@ let LocationService = class LocationService {
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         let d = R * c; // Distance in km
-        return d;
+        return d * 1000; // in metres
     }
     deg2rad(deg) {
         return deg * (Math.PI / 180);
