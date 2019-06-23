@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        >\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -132,8 +132,10 @@ let AppComponent = class AppComponent {
     watchMyLocation() {
         //this.locations[0] = this.locationService.watchLocation();
         this.locationService.watchLocationObservable().subscribe(newLocation => {
-            console.log('newLocation', newLocation);
-            this.locations[0] = newLocation;
+            this.locations[0].latitude = newLocation.coords.latitude;
+            this.locations[0].longitude = newLocation.coords.longitude;
+            this.locations[0].accuracy = newLocation.coords.accuracy;
+            console.log('watchMyLocation', this.locations[0]);
         });
     }
     getImage() {
@@ -320,12 +322,14 @@ let LocationService = class LocationService {
     watchLocationObservable() {
         return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].create(observer => {
             if (navigator.geolocation) {
-                let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
+                //let location = new LocationObject();
                 navigator.geolocation.watchPosition(position => {
-                    location.latitude = position.coords.latitude;
-                    location.longitude = position.coords.longitude;
-                    location.accuracy = position.coords.accuracy;
-                    console.log('location', location);
+                    observer.next(position);
+                    observer.complete;
+                    // location.latitude = position.coords.latitude;
+                    // location.longitude = position.coords.longitude;
+                    // location.accuracy = position.coords.accuracy;
+                    console.log('watchLocationObservable', position);
                 } //,
                 // (error: PositionError) => console.log(error),
                 // { enableHighAccuracy: true }
