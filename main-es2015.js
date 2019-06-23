@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h2>\n    {{ title }}\n  </h2>\n</div>\n\n<h1>My Location:</h1>\n<p>Latitude: {{ locations[0].latitude }}</p>\n<p>Longitude: {{ locations[0].longitude }}</p>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<ul *ngFor=\"let imageJson of imageJsons\">\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a></h2>\n  </li>\n</ul>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h2>\n    {{ title }}\n  </h2>\n</div>\n\n<h1>My Location:</h1>\n<div class=\"row\">\n  <p>Latitude: {{ locations[0].latitude }}</p>\n  <p>Longitude: {{ locations[0].longitude }}</p>\n</div>\n\n<div class=\"row\">\n  <h2>Map</h2>\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\" [latitude]=\"locations[0].latitude\"\n    [longitude]=\"locations[0].longitude\">\n    <div *ngFor=\"let location of locations\">\n      <p>{{ location }}</p>\n      <agm-marker\n        [latitude]=\"location.latitude\"\n        [longitude]=\"location.longitude\"\n        *ngIf=\"location.selected\">\n      </agm-marker>\n    </div>\n  </agm-map>\n</div>\n\n<h2>Images:</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -106,14 +106,18 @@ let AppComponent = class AppComponent {
         this.locations.push(new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]());
     }
     ngOnInit() {
-        this.getCurrentLocation();
-        //this.start();
-        //this.getImage();
+        this.watchMyLocation();
     }
+    ngOnDestroy() {
+        // TODO unsubscribe where necessary
+    }
+    // TODO this may be used to for something, so it's staying here for now
     start() {
         this.interval = setInterval(() => {
             this.frame();
-        }, 50 * 60);
+        }, 30 * 60);
+    }
+    frame() {
     }
     onSelectLocation(event) {
         let location = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_4__["LocationObject"]();
@@ -125,20 +129,11 @@ let AppComponent = class AppComponent {
         console.log('distance from me', this.distanceFromMe);
         this.locationCount++;
     }
-    getCurrentLocation() {
-        let location = this.locationService.getCurrentLocation();
-        //console.log('location', location);
-        location.selected = true;
-        this.locations[0] = location;
-        //this.locationCount++;
-        //console.log('my location', location[0]);
-    }
-    // private getMyLocation() {
-    //   this.myLocation = this.locationService.getCurrentLocation();
-    //   console.log('myLocation', this.myLocation);
-    // }
-    frame() {
-        this.getCurrentLocation();
+    watchMyLocation() {
+        this.locations[0] = this.locationService.watchLocation();
+        this.locationService.watchLocationObservable().subscribe(newLocation => {
+            console.log('newLocation', newLocation);
+        });
     }
     getImage() {
         this.apiService.getImage()
@@ -299,40 +294,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LocationService", function() { return LocationService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _location_object_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./location-object.model */ "./src/app/shared/location-object.model.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _location_object_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./location-object.model */ "./src/app/shared/location-object.model.ts");
+
 
 
 
 let LocationService = class LocationService {
     constructor() { }
-    // getCurrentLocation() {
-    //   let location = new LocationObject();
-    //   if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(position => {
-    //       if (position) {
-    //         location.latitude = position.coords.latitude;
-    //         location.longitude = position.coords.longitude;
-    //       }
-    //     },
-    //       (error: PositionError) => console.log(error));
-    //   } else {
-    //     alert( "Geolocation is not supported by this browser.");
-    //   }
-    //   return location;
-    // }
-    getCurrentLocation() {
-        let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_2__["LocationObject"]();
+    watchLocation() {
+        let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(position => {
                 location.latitude = position.coords.latitude;
                 location.longitude = position.coords.longitude;
                 location.accuracy = position.coords.accuracy;
-            }, (error) => console.log(error));
+            }, (error) => console.log(error), { enableHighAccuracy: true });
         }
         else {
             alert("Geolocation is not supported by this browser.");
         }
         return location;
+    }
+    watchLocationObservable() {
+        let location = new _location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
+        return rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"].create(observer => {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(position => {
+                    location.latitude = position.coords.latitude;
+                    location.longitude = position.coords.longitude;
+                    location.accuracy = position.coords.accuracy;
+                }, (error) => console.log(error), { enableHighAccuracy: true });
+            }
+            else {
+                alert("Geolocation is not supported by this browser.");
+            }
+            return location;
+        });
     }
     getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
         let R = 6371; // Radius of the earth in km
