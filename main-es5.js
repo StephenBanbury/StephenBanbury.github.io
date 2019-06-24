@@ -106,7 +106,6 @@ var AppComponent = /** @class */ (function () {
         this.locationService = locationService;
         this.title = 'mudita-client';
         this.imageJsons = new Array();
-        this.eventCount = 0;
         this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         this.events = new Array();
         //this.eventLocations.push(new LocationObject());
@@ -142,15 +141,13 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.frame = function () {
     };
     AppComponent.prototype.onSelectLocation = function (event) {
+        var newEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__["EventObject"]();
         var newEventLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         newEventLocation.latitude = event.coords.lat;
         newEventLocation.longitude = event.coords.lng;
-        var newEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__["EventObject"]();
         newEvent.location = newEventLocation;
-        newEvent.distance = Math.round(this.locationService.getDistanceFromLatLonInKm(this.myLocation.latitude, this.myLocation.longitude, event.coords.lat, event.coords.lng));
         newEvent.selected = true;
         this.events.push(newEvent);
-        this.eventCount++;
         this.checkForLocalEvents();
     };
     AppComponent.prototype.trackMyLocation = function () {
@@ -159,7 +156,6 @@ var AppComponent = /** @class */ (function () {
             _this.myLocation.latitude = newLocation.coords.latitude;
             _this.myLocation.longitude = newLocation.coords.longitude;
             _this.myLocation.accuracy = newLocation.coords.accuracy;
-            //console.log('watchMyLocation', this.locations[0]);
             _this.checkForLocalEvents();
         });
     };
@@ -167,13 +163,13 @@ var AppComponent = /** @class */ (function () {
         this.locationService.stopWatchLocation();
     };
     AppComponent.prototype.checkForLocalEvents = function () {
-        var eventCount = this.events.length;
-        if (eventCount == 0) {
+        var _this = this;
+        if (this.events.length == 0) {
             this.statusMessage = 'No events nearby';
             return false;
         }
+        this.events.forEach(function (e) { return e.distance = Math.round(_this.locationService.getDistanceFromLatLonInKm(_this.myLocation.latitude, _this.myLocation.longitude, e.location.latitude, e.location.longitude)); });
         this.events.sort(function (a, b) { return a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0; });
-        console.log('this.eventLocations', this.events);
         if (this.events[0].distance <= 20) {
             this.statusMessage = "There is an event close by! Here's a random image from Unsplash's API for you..";
             if (this.imageJsons.length == 0) {
