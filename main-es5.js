@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div>\n\n<h3>Events</h3>\n<div class=\"row\" *ngFor=\"let event of events\">\n  {{ event.distance }} m <b *ngIf=\"event.distance <= 20\">... close!</b>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let event of events\"\n      [latitude]=\"event.location.latitude\"\n      [longitude]=\"event.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n  <b>{{ event.title }}</b>\n</div>\n\n<h1>Selected Event: {{ myEvent.title }}</h1>\n\n<!-- <h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div> -->\n\n<h3>Events</h3>\n<div class=\"row\" *ngFor=\"let fence of myEvent.fences\">\n  {{ fence.distance }} m <b *ngIf=\"fence.distance <= 20\">... close!</b>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -92,8 +92,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _shared_api_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shared/api.service */ "./src/app/shared/api.service.ts");
 /* harmony import */ var _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./shared/location-object.model */ "./src/app/shared/location-object.model.ts");
-/* harmony import */ var _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared/event-object.model */ "./src/app/shared/event-object.model.ts");
-/* harmony import */ var _shared_location_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./shared/location.service */ "./src/app/shared/location.service.ts");
+/* harmony import */ var _shared_location_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared/location.service */ "./src/app/shared/location.service.ts");
+/* harmony import */ var _shared_event_object_model__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./shared/event-object.model */ "./src/app/shared/event-object.model.ts");
+/* harmony import */ var _shared_fence_object_model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./shared/fence-object-model */ "./src/app/shared/fence-object-model.ts");
+
 
 
 
@@ -106,9 +108,9 @@ var AppComponent = /** @class */ (function () {
         this.locationService = locationService;
         this.title = 'mudita-client';
         this.imageJsons = new Array();
+        this.myEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_5__["EventObject"]();
         this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         this.events = new Array();
-        //this.eventLocations.push(new LocationObject());
         this.zoom = 17;
         this.myMarkerLabelOptions = {
             color: '#000',
@@ -126,28 +128,52 @@ var AppComponent = /** @class */ (function () {
         };
     }
     AppComponent.prototype.ngOnInit = function () {
+        this.events = this.apiService.getEventBasicDetails();
         this.trackMyLocation();
     };
     AppComponent.prototype.ngOnDestroy = function () {
         this.stopTrackMyLocation;
     };
     // TODO this may be used to for something, so it's staying here for now
-    AppComponent.prototype.start = function () {
-        var _this = this;
-        this.interval = setInterval(function () {
-            _this.frame();
-        }, 30 * 60);
+    // start() {
+    //   this.interval = setInterval(() => {
+    //     this.frame();
+    //   }, 30 * 60);
+    // }
+    // private frame() {
+    // }
+    AppComponent.prototype.onSelectEvent = function (event) {
+        this.getEventDataFromApi(event.id);
     };
-    AppComponent.prototype.frame = function () {
+    AppComponent.prototype.getEventDataFromApi = function (eventId) {
+        var _this = this;
+        var eventData = this.apiService.getEventDetails(eventId);
+        this.myEvent.id = eventData.eventId;
+        this.myEvent.title = eventData.title;
+        this.myEvent.fences = new Array();
+        eventData.fence.forEach(function (fence) {
+            var newFence = new _shared_fence_object_model__WEBPACK_IMPORTED_MODULE_6__["FenceObject"]();
+            var newFenceLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
+            newFenceLocation.latitude = fence.latitude;
+            newFenceLocation.longitude = fence.longitude;
+            newFence.location = newFenceLocation;
+            newFence.text = fence.text;
+            newFence.imageUrl = fence.imageUrl;
+            newFence.selected = true;
+            _this.myEvent.fences.push(newFence);
+        });
+        this.checkForLocalEvents();
     };
     AppComponent.prototype.onSelectLocation = function (event) {
-        var newEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_4__["EventObject"]();
-        var newEventLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
-        newEventLocation.latitude = event.coords.lat;
-        newEventLocation.longitude = event.coords.lng;
-        newEvent.location = newEventLocation;
-        newEvent.selected = true;
-        this.events.push(newEvent);
+        var newFence = new _shared_fence_object_model__WEBPACK_IMPORTED_MODULE_6__["FenceObject"]();
+        var newFenceLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
+        // console.log('latitude', event.coords.lat);
+        // console.log('longitude', event.coords.lng);
+        newFenceLocation.latitude = event.coords.lat;
+        newFenceLocation.longitude = event.coords.lng;
+        newFence.location = newFenceLocation;
+        newFence.selected = true;
+        this.myEvent.fences.push(newFence);
         this.checkForLocalEvents();
     };
     AppComponent.prototype.trackMyLocation = function () {
@@ -164,17 +190,17 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.checkForLocalEvents = function () {
         var _this = this;
-        if (this.events.length == 0) {
+        if (this.myEvent.fences.length == 0) {
             this.statusMessage = 'No events nearby';
             return false;
         }
-        this.events.forEach(function (e) { return e.distance = Math.round(_this.locationService.getDistanceFromLatLonInKm(_this.myLocation.latitude, _this.myLocation.longitude, e.location.latitude, e.location.longitude)); });
-        this.events.sort(function (a, b) { return a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0; });
-        if (this.events[0].distance <= 20) {
+        this.myEvent.fences.forEach(function (e) { return e.distance = Math.round(_this.locationService.getDistanceFromLatLonInKm(_this.myLocation.latitude, _this.myLocation.longitude, e.location.latitude, e.location.longitude)); });
+        this.myEvent.fences.sort(function (a, b) { return a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0; });
+        if (this.myEvent.fences[0].distance <= 20) {
             this.statusMessage = "There is an event close by! Here's a random image from Unsplash's API for you..";
-            if (this.imageJsons.length == 0) {
-                this.getImage();
-            }
+            // if(this.imageJsons.length == 0){
+            //   this.getImage();
+            // }
         }
         else {
             this.statusMessage = "No events nearby";
@@ -196,7 +222,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"], _shared_location_service__WEBPACK_IMPORTED_MODULE_5__["LocationService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"], _shared_location_service__WEBPACK_IMPORTED_MODULE_4__["LocationService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -286,6 +312,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _shared_event_object_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../shared/event-object.model */ "./src/app/shared/event-object.model.ts");
+/* harmony import */ var _shared_mock_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../shared/mock-api */ "./src/app/shared/mock-api.ts");
+
+
 
 
 
@@ -299,6 +329,23 @@ var ApiService = /** @class */ (function () {
         this.soundApiUrl = "";
         this.soundApiKey = "";
     }
+    ApiService.prototype.getEventBasicDetails = function () {
+        var _this = this;
+        this.events = new Array();
+        var eventsData = _shared_mock_api__WEBPACK_IMPORTED_MODULE_4__["MuditaApi"];
+        eventsData.event.forEach(function (event) {
+            var newEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_3__["EventObject"]();
+            newEvent.id = event.eventId;
+            newEvent.title = event.title;
+            _this.events.push(newEvent);
+        });
+        return this.events;
+    };
+    ApiService.prototype.getEventDetails = function (eventId) {
+        var event;
+        event = _shared_mock_api__WEBPACK_IMPORTED_MODULE_4__["MuditaApi"].event.filter(function (event) { return event.eventId == eventId; });
+        return event[0];
+    };
     ApiService.prototype.getImage = function () {
         var url = this.imageApiUrl + this.imageApiKey;
         return this.http.get(url);
@@ -334,6 +381,26 @@ var EventObject = /** @class */ (function () {
     function EventObject() {
     }
     return EventObject;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/shared/fence-object-model.ts":
+/*!**********************************************!*\
+  !*** ./src/app/shared/fence-object-model.ts ***!
+  \**********************************************/
+/*! exports provided: FenceObject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FenceObject", function() { return FenceObject; });
+var FenceObject = /** @class */ (function () {
+    function FenceObject() {
+    }
+    return FenceObject;
 }());
 
 
@@ -420,6 +487,79 @@ var LocationService = /** @class */ (function () {
     return LocationService;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/app/shared/mock-api.ts":
+/*!************************************!*\
+  !*** ./src/app/shared/mock-api.ts ***!
+  \************************************/
+/*! exports provided: MuditaApi */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MuditaApi", function() { return MuditaApi; });
+var MuditaApi = {
+    "event": [{
+            "eventId": 1,
+            "title": "City Safari",
+            "fence": [
+                {
+                    "fenceId": 1,
+                    "tag": "City Slickers",
+                    "latitude": 51.47131976320642,
+                    "longitude": -3.1857964233481653,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla."
+                },
+                {
+                    "fenceId": 2,
+                    "tag": "Pearly Kings",
+                    "latitude": 51.471600450847056,
+                    "longitude": -3.185302896889425,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://www.w3schools.com/howto/img_snow.jpg"
+                },
+                {
+                    "fenceId": 3,
+                    "tag": "Pearly Queens",
+                    "latitude": 51.47159376782806,
+                    "longitude": -3.1853887275779016,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://interactive-examples.mdn.mozilla.net/media/examples/grapefruit-slice-332-332.jpg"
+                }
+            ],
+        },
+        {
+            "eventId": 2,
+            "title": "Spy Game",
+            "fence": [
+                {
+                    "fenceId": 1,
+                    "tag": "Dodgy Lane",
+                    "latitude": 51.47151691303928,
+                    "longitude": -3.1855603889548547,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla."
+                },
+                {
+                    "fenceId": 2,
+                    "tag": "Danger Alley",
+                    "latitude": 51.47148015635539,
+                    "longitude": -3.1856408552253015,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla."
+                },
+                {
+                    "fenceId": 3,
+                    "tag": "Cut-throat Way",
+                    "latitude": 51.47124624949133,
+                    "longitude": -3.1852975324713952,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://data1.ibtimes.co.in/cache-img-0-450/en/full/694772/1538412234_black-hole.png"
+                }
+            ],
+        }],
+};
 
 
 /***/ }),
