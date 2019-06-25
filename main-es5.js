@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n  <b>{{ event.title }}</b>\n</div>\n\n<h1>Selected Event: {{ myEvent.title }}</h1>\n\n<!-- <h2>My Location:</h2>\n<div class=\"row\">\n  <p>Latitude: {{ myLocation.latitude }}</p>\n  <p>Longitude: {{ myLocation.longitude }}</p>\n</div> -->\n\n<h3>Events</h3>\n<div class=\"row\" *ngFor=\"let fence of myEvent.fences\">\n  {{ fence.distance }} m <b *ngIf=\"fence.distance <= 20\">... close!</b>\n</div>\n\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<h2>{{ statusMessage }}</h2>\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div class=\"row\">\n  <div *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n    <b>{{ event.title }}</b>\n  </div>\n\n  <h1 *ngIf=\"eventSelected\">Selected Event: {{ myEvent.title }}</h1>\n\n  <h2>{{ statusMessage }}</h2>\n\n  <div *ngIf=\"eventSelected\">\n    <h3>Events</h3>\n    <div class=\"row\" *ngFor=\"let fence of myEvent.fences\">\n      {{ fence.tag }} ({{ fence.distance }} m) <b *ngIf=\"fence.distance <= 20\">... close!</b>\n    </div>\n  </div>\n</div>\n<br><br>\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -106,12 +106,12 @@ var AppComponent = /** @class */ (function () {
     function AppComponent(apiService, locationService) {
         this.apiService = apiService;
         this.locationService = locationService;
-        this.title = 'mudita-client';
+        this.title = 'Mudita';
         this.imageJsons = new Array();
         this.myEvent = new _shared_event_object_model__WEBPACK_IMPORTED_MODULE_5__["EventObject"]();
         this.myLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
         this.events = new Array();
-        this.zoom = 17;
+        this.zoom = 18;
         this.myMarkerLabelOptions = {
             color: '#000',
             fontFamily: '',
@@ -128,6 +128,7 @@ var AppComponent = /** @class */ (function () {
         };
     }
     AppComponent.prototype.ngOnInit = function () {
+        this.eventSelected = false;
         this.events = this.apiService.getEventBasicDetails();
         this.trackMyLocation();
     };
@@ -143,7 +144,9 @@ var AppComponent = /** @class */ (function () {
     // private frame() {
     // }
     AppComponent.prototype.onSelectEvent = function (event) {
+        this.eventSelected = true;
         this.getEventDataFromApi(event.id);
+        this.checkForLocalEventFences();
     };
     AppComponent.prototype.getEventDataFromApi = function (eventId) {
         var _this = this;
@@ -159,10 +162,10 @@ var AppComponent = /** @class */ (function () {
             newFence.location = newFenceLocation;
             newFence.text = fence.text;
             newFence.imageUrl = fence.imageUrl;
+            newFence.tag = fence.tag;
             newFence.selected = true;
             _this.myEvent.fences.push(newFence);
         });
-        this.checkForLocalEvents();
     };
     AppComponent.prototype.onSelectLocation = function (event) {
         var newFence = new _shared_fence_object_model__WEBPACK_IMPORTED_MODULE_6__["FenceObject"]();
@@ -174,7 +177,7 @@ var AppComponent = /** @class */ (function () {
         newFence.location = newFenceLocation;
         newFence.selected = true;
         this.myEvent.fences.push(newFence);
-        this.checkForLocalEvents();
+        this.checkForLocalEventFences();
     };
     AppComponent.prototype.trackMyLocation = function () {
         var _this = this;
@@ -182,13 +185,15 @@ var AppComponent = /** @class */ (function () {
             _this.myLocation.latitude = newLocation.coords.latitude;
             _this.myLocation.longitude = newLocation.coords.longitude;
             _this.myLocation.accuracy = newLocation.coords.accuracy;
-            _this.checkForLocalEvents();
+            if (_this.eventSelected) {
+                _this.checkForLocalEventFences();
+            }
         });
     };
     AppComponent.prototype.stopTrackMyLocation = function () {
         this.locationService.stopWatchLocation();
     };
-    AppComponent.prototype.checkForLocalEvents = function () {
+    AppComponent.prototype.checkForLocalEventFences = function () {
         var _this = this;
         if (this.myEvent.fences.length == 0) {
             this.statusMessage = 'No events nearby';
@@ -197,7 +202,7 @@ var AppComponent = /** @class */ (function () {
         this.myEvent.fences.forEach(function (e) { return e.distance = Math.round(_this.locationService.getDistanceFromLatLonInKm(_this.myLocation.latitude, _this.myLocation.longitude, e.location.latitude, e.location.longitude)); });
         this.myEvent.fences.sort(function (a, b) { return a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0; });
         if (this.myEvent.fences[0].distance <= 20) {
-            this.statusMessage = "There is an event close by! Here's a random image from Unsplash's API for you..";
+            this.statusMessage = "There is an event close by!"; // Here's a random image from Unsplash's API for you..";
             // if(this.imageJsons.length == 0){
             //   this.getImage();
             // }
@@ -504,18 +509,18 @@ __webpack_require__.r(__webpack_exports__);
 var MuditaApi = {
     "event": [{
             "eventId": 1,
-            "title": "City Safari",
+            "title": "City Pub Safari",
             "fence": [
                 {
                     "fenceId": 1,
-                    "tag": "City Slickers",
+                    "tag": "Dog & Duck",
                     "latitude": 51.47131976320642,
                     "longitude": -3.1857964233481653,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla."
                 },
                 {
                     "fenceId": 2,
-                    "tag": "Pearly Kings",
+                    "tag": "Poet's Corner",
                     "latitude": 51.471600450847056,
                     "longitude": -3.185302896889425,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
@@ -523,7 +528,7 @@ var MuditaApi = {
                 },
                 {
                     "fenceId": 3,
-                    "tag": "Pearly Queens",
+                    "tag": "The Grange",
                     "latitude": 51.47159376782806,
                     "longitude": -3.1853887275779016,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
