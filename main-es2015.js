@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div class=\"row\">\n  <div *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n    <b>{{ event.title }}</b>\n  </div>\n\n  <h1 *ngIf=\"eventSelected\">Selected Event: {{ myEvent.title }}</h1>\n\n  <h2>{{ statusMessage }}</h2>\n\n  <div *ngIf=\"eventSelected\">\n    <h3>Events</h3>\n    <div class=\"row\" *ngFor=\"let fence of myEvent.fences\">\n      {{ fence.tag }} ({{ fence.distance }} m) <b *ngIf=\"fence.distance <= 20\">... close!</b>\n    </div>\n  </div>\n</div>\n<br><br>\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col\" *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n      <b>{{ event.title }}</b>\n    </div>\n    <div class=\"col\">\n    <h3 *ngIf=\"eventSelected\" style=\"color: red\">Selected Event: {{ myEvent.title }}</h3>\n  </div>\n  </div>\n  <div class=\"row>\">\n    <div class=\"col\">\n    <h2>{{ statusMessage }}</h2>\n  </div>\n    <div class=\"col\" *ngIf=\"eventSelected\">\n      <div *ngFor=\"let fence of myEvent.fences\">\n        {{ fence.tag }} ({{ fence.distance }} m) <b *ngIf=\"fence.distance <= 10\">... close!</b>\n      </div>\n    </div>\n  </div>\n</div>\n\n<br><br>\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -166,8 +166,8 @@ let AppComponent = class AppComponent {
     onSelectLocation(event) {
         const newFence = new _shared_fence_object_model__WEBPACK_IMPORTED_MODULE_6__["FenceObject"]();
         const newFenceLocation = new _shared_location_object_model__WEBPACK_IMPORTED_MODULE_3__["LocationObject"]();
-        // console.log('latitude', event.coords.lat);
-        // console.log('longitude', event.coords.lng);
+        console.log('latitude', event.coords.lat);
+        console.log('longitude', event.coords.lng);
         newFenceLocation.latitude = event.coords.lat;
         newFenceLocation.longitude = event.coords.lng;
         newFence.location = newFenceLocation;
@@ -248,6 +248,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm2015/animations.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm2015/material.js");
+/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm2015/ng-bootstrap.js");
 
 
 
@@ -261,6 +262,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // material animations
  // for example
+
 // see https://material.angular.io/guide/getting-started
 let AppModule = class AppModule {
 };
@@ -280,7 +282,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
             _agm_core__WEBPACK_IMPORTED_MODULE_4__["AgmCoreModule"].forRoot({
                 apiKey: 'AIzaSyCSXgPI_1LG_thKRrq92Mu-rfnnUskP9-w'
-            })
+            }),
+            _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_12__["NgbModule"]
         ],
         providers: [],
         bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]]
@@ -502,7 +505,23 @@ const MuditaApi = {
                     "latitude": 51.47159376782806,
                     "longitude": -3.1853887275779016,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://www.gettyimages.co.uk/gi-resources/images/RoyaltyFree/Apr17Update/ColourSurge1.jpg"
+                },
+                {
+                    "fenceId": 4,
+                    "tag": "Blue Anchor",
+                    "latitude": 51.47178710361754,
+                    "longitude": -3.1854950221519402,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
                     "imageUrl": "https://interactive-examples.mdn.mozilla.net/media/examples/grapefruit-slice-332-332.jpg"
+                },
+                {
+                    "fenceId": 5,
+                    "tag": "The Corporation",
+                    "latitude": 51.47194749512348,
+                    "longitude": -3.185548666332238,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://www.w3schools.com/howto/img_snow.jpg"
                 }
             ],
         },
@@ -519,7 +538,7 @@ const MuditaApi = {
                 },
                 {
                     "fenceId": 2,
-                    "tag": "Danger Alley",
+                    "tag": "Covert Alley",
                     "latitude": 51.47148015635539,
                     "longitude": -3.1856408552253015,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla."
@@ -531,6 +550,22 @@ const MuditaApi = {
                     "longitude": -3.1852975324713952,
                     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
                     "imageUrl": "https://data1.ibtimes.co.in/cache-img-0-450/en/full/694772/1538412234_black-hole.png"
+                },
+                {
+                    "fenceId": 4,
+                    "tag": "Bludgeon Avenue",
+                    "latitude": 51.47175368864949,
+                    "longitude": -3.185098055217736,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "http://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg"
+                },
+                {
+                    "fenceId": 5,
+                    "tag": "Secret Street",
+                    "latitude": 51.47111545806176,
+                    "longitude": -3.1861923964958123,
+                    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper nisl ac nibh dapibus, non lacinia ante mollis. Etiam et convallis eros, et semper ipsum. Maecenas quis euismod elit. Cras lacus eros, lobortis sed orci ac, posuere sagittis lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris venenatis risus eget ex aliquet, at efficitur ligula imperdiet. Ut elementum accumsan rutrum. Suspendisse nec facilisis nulla. Curabitur sapien ipsum, vulputate cursus lectus eget, varius tempus metus. Suspendisse odio nulla, consequat sit amet faucibus ac, rhoncus id justo. Aenean a urna leo. Praesent nec est sem. Integer facilisis, tortor vitae finibus consequat, leo nisl feugiat libero, a consectetur ex urna in nulla.",
+                    "imageUrl": "https://images.pexels.com/photos/257360/pexels-photo-257360.jpeg?auto=format%2Ccompress&cs=tinysrgb&dpr=1&w=500"
                 }
             ],
         }],
