@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col\" *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n      <b>{{ event.title }}</b>\n    </div>\n    <div class=\"col\">\n    <h3 *ngIf=\"eventSelected\" style=\"color: red\">Selected Event: {{ myEvent.title }}</h3>\n  </div>\n  </div>\n  <div class=\"row>\">\n    <div class=\"col\">\n    <h2>{{ statusMessage }}</h2>\n  </div>\n    <div class=\"col\" *ngIf=\"eventSelected\">\n      <div *ngFor=\"let fence of myEvent.fences\">\n        {{ fence.tag }} ({{ fence.distance }} m) <b *ngIf=\"fence.distance <= 10\">... close!</b>\n      </div>\n    </div>\n  </div>\n</div>\n\n<br><br>\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
+module.exports = "<div style=\"text-align:center\">\n  <h1>\n    {{ title }}\n  </h1>\n</div>\n\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col\" *ngFor=\"let event of events\" (click)=\"onSelectEvent(event)\">\n      <b>{{ event.title }}</b>\n    </div>\n    <div class=\"col\">\n    <h3 *ngIf=\"eventSelected\" style=\"color: red\">Selected Event: {{ myEvent.title }}</h3>\n  </div>\n  </div>\n  <div class=\"row>\">\n    <div class=\"col\">\n    <h2>{{ statusMessage }}</h2>\n  </div>\n    <div class=\"col\" *ngIf=\"eventSelected\">\n      <div *ngFor=\"let fence of myEvent.fences\">\n        {{ fence.tag }} ({{ fence.distance }} m) <b *ngIf=\"fence.distance <= 5\">... really close!</b>\n      </div>\n    </div>\n  </div>\n</div>\n\n<br><br>\n<div class=\"row\">\n  <agm-map #map (mapClick)=\"onSelectLocation($event)\"\n    [latitude]=\"myLocation.latitude\"\n    [longitude]=\"myLocation.longitude\"\n    [zoom]=\"zoom\">\n    <agm-marker\n      [latitude]=\"myLocation.latitude\"\n      [longitude]=\"myLocation.longitude\"\n      [label]=\"myMarkerLabelOptions\"\n      [iconUrl]=\"myMarkerIconOptions\">\n    </agm-marker>\n    <agm-marker *ngFor=\"let fence of myEvent.fences\"\n      [latitude]=\"fence.location.latitude\"\n      [longitude]=\"fence.location.longitude\">\n    </agm-marker>\n  </agm-map>\n</div>\n\n<div class=\"row\">\n  <ul *ngFor=\"let imageJson of imageJsons\">\n    <li>\n      <h2><a target=\"_blank\" rel=\"noopener\"\n          href='{{ imageJson.urls.raw + \"&w=1500&dpi=2\" }}'>{{ imageJson.alt_description == null ? 'untitled' : imageJson.alt_description }}</a>\n      </h2>\n    </li>\n  </ul>\n</div>\n\n\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -201,14 +201,14 @@ var AppComponent = /** @class */ (function () {
         }
         this.myEvent.fences.forEach(function (e) { return e.distance = Math.round(_this.locationService.getDistanceFromLatLonInKm(_this.myLocation.latitude, _this.myLocation.longitude, e.location.latitude, e.location.longitude)); });
         this.myEvent.fences.sort(function (a, b) { return a.distance < b.distance ? -1 : a.distance > b.distance ? 1 : 0; });
-        if (this.myEvent.fences[0].distance <= 20) {
-            this.statusMessage = "There is an event close by!"; // Here's a random image from Unsplash's API for you..";
+        if (this.myEvent.fences[0].distance <= 10) {
+            this.statusMessage = "There is a zone close by!"; // Here's a random image from Unsplash's API for you..";
             // if(this.imageJsons.length == 0){
             //   this.getImage();
             // }
         }
         else {
-            this.statusMessage = "No events nearby";
+            this.statusMessage = "No zones nearby";
             this.imageJsons = new Array();
         }
     };
